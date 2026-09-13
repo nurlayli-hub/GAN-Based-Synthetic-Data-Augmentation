@@ -1,0 +1,59 @@
+# =====================================================================
+# GAN-Based Synthetic Data Augmentation for Multi-Class Diabetes
+# Classification - notebook dependencies
+# ---------------------------------------------------------------------
+# Google Colab already provides most of these. Only two packages have
+# to be installed there, and the notebooks do it themselves:
+#
+#     !pip install ctgan          (notebook 02)
+#     !pip install lazypredict    (notebook 07)
+#
+# Use this file to reproduce the environment outside Colab:
+#
+#     python -m venv .venv
+#     .venv\Scripts\activate          (Windows)
+#     source .venv/bin/activate       (Linux / macOS)
+#     pip install -r requirements.txt
+#
+# Python 3.10 or newer. The reported results were produced on
+# Google Colab with Python 3.13 and an NVIDIA GPU (CUDA).
+# =====================================================================
+
+# ---- core data handling ---------------------------------------------
+numpy>=1.26
+pandas>=2.0
+scipy>=1.11                 # ks_2samp, wasserstein_distance, binomtest
+
+# ---- machine learning -----------------------------------------------
+scikit-learn>=1.6.1         # splitting, encoding, scaling, CV, metrics
+lightgbm>=4.0
+xgboost>=2.0                # 2.x needed for device="cuda"; 1.x falls back
+                            # to tree_method="gpu_hist" automatically
+
+# ---- generative models ----------------------------------------------
+torch>=2.0                  # CWGAN-GP, TableGAN, MedGAN (notebooks 03-05)
+ctgan==0.12.1               # notebook 02
+
+# ---- baseline screening ---------------------------------------------
+lazypredict>=0.2.12         # notebook 07, the 21-model screening
+
+# ---- plotting and tables --------------------------------------------
+matplotlib>=3.7
+seaborn>=0.13
+tabulate>=0.9
+
+# ---- notebook environment -------------------------------------------
+ipython>=8.0
+notebook>=7.0               # only if running locally instead of Colab
+
+# =====================================================================
+# NOT on PyPI, provided by the runtime:
+#   google.colab     - the upload and download cells. Running locally,
+#                      delete those cells and put the CSV files in the
+#                      working directory instead.
+#
+# GPU note: `pip install torch` gives the CPU build. For CUDA, follow
+# https://pytorch.org/get-started/locally/ and pick the wheel matching
+# your driver, for example:
+#   pip install torch --index-url https://download.pytorch.org/whl/cu121
+# =====================================================================
