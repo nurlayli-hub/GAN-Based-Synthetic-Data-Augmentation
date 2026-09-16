@@ -1,0 +1,73 @@
+# =====================================================================
+# GAN-Based Synthetic Data Augmentation for Multi-Class Diabetes
+# Classification - notebook dependencies
+# ---------------------------------------------------------------------
+# Google Colab already provides most of these. Only two packages have
+# to be installed there, and the notebooks do it themselves:
+#
+#     !pip install ctgan          (notebook 02)
+#     !pip install lazypredict    (notebook 07)
+#
+# Use this file to reproduce the environment outside Colab:
+#
+#     python -m venv .venv
+#     .venv\Scripts\activate          (Windows)
+#     source .venv/bin/activate       (Linux / macOS)
+#     pip install -r requirements.txt
+#
+# Python 3.10 or newer. The reported results were produced on
+# Google Colab with Python 3.13 and an NVIDIA GPU (CUDA).
+# =====================================================================
+
+# ---- core data handling ---------------------------------------------
+numpy>=1.26
+pandas>=2.0
+scipy>=1.11                 # ks_2samp and wasserstein_distance in 06;
+                            # randint and uniform for the search spaces in 08
+
+# ---- machine learning -----------------------------------------------
+scikit-learn>=1.6.1         # splitting, encoding, scaling, CV, metrics,
+                            # the 21 screening models in 07, and
+                            # compute_sample_weight in the weighted 08
+lightgbm>=4.0               # notebooks 07 and 08
+xgboost>=2.0                # 2.x needed for device="cuda"; 1.x falls back
+                            # to tree_method="gpu_hist" automatically
+
+# ---- generative models ----------------------------------------------
+torch>=2.0                  # CWGAN-GP, TableGAN, MedGAN (notebooks 03-05);
+                            # also imported by 02 for seeding
+ctgan==0.12.1               # notebook 02
+
+# ---- baseline screening ---------------------------------------------
+lazypredict>=0.2.12         # imported by notebook 07. The screening itself
+                            # is run from an explicit 21-model dictionary,
+                            # but the import cell fails without this package
+
+# ---- plotting and tables --------------------------------------------
+matplotlib>=3.7
+seaborn>=0.13
+tabulate>=0.9
+
+# ---- notebook environment -------------------------------------------
+ipython>=8.0                # IPython.display.display, used in 01 and in the
+                            # validity-report cells of 02-05
+notebook>=7.0               # only if running locally instead of Colab
+
+# =====================================================================
+# NOT on PyPI, provided by the runtime:
+#   google.colab     - the upload and download cells in every notebook,
+#                      and drive.mount() in 02 (per-class checkpoints)
+#                      and 07 (incremental results file). Running
+#                      locally, delete those cells, put the CSV files in
+#                      the working directory, and point CKPT_ROOT and
+#                      csv_path at a local folder.
+#
+# GPU note: `pip install torch` gives the CPU build. For CUDA, follow
+# https://pytorch.org/get-started/locally/ and pick the wheel matching
+# your driver, for example:
+#   pip install torch --index-url https://download.pytorch.org/whl/cu121
+#
+# Notebooks 02 and 03 raise a RuntimeError when no CUDA device is
+# visible, by design. To run them on CPU, remove that guard and set
+# USE_GPU = False (02) or DEVICE_CONFIG = "CPU" (03-05).
+# =====================================================================
